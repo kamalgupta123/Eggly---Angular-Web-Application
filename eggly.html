@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="moustache" ng-controller="moustacheCtrl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="eggly.css">
+</head>
+<body ng-class="{'overflow-on':shouldShowEditing()}">
+    <div class="container-fluid">
+    <div class="row">
+           <div class="col-xs-2 sidebar">
+                 <img class="logo" src="logo.jpg">
+                 <ul>
+                     <li ng-repeat="cateogarie in cateogaries" ng-class="{'active':isCurrentCateogary(cateogarie)}">
+                         <a ng-click="setCurrentCateogary(cateogarie)">{{cateogarie.name}}</a>
+                     </li>
+                 </ul>
+           </div>
+           <div class="col-xs-10 main">
+               <div ng-repeat="bookmark in bookmarks | filter:{category:currentCateogary.name}">
+                  <button class="btn btn-link" ng-click="setEditedBookmark(bookmark); startEditing();"><span ng-class="{'active-bookmark':isSelectedBookmark(bookmark)}" class="glyphicon glyphicon-pencil"></span></button>
+                  <a href="" class="bookmark" ng-class="{'active-bookmark':isSelectedBookmark(bookmark)}" >{{bookmark.title}}</a>
+                  <button type="button" class="close" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                  </button>
+               </div>
+               <hr>
+               <div ng-click="startCreating()" ng-class="{'active-add-bookmark':isCreatingOn()}" ng-if="currentCateogaryNotNull()"class="add-bookmark"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Create Bookmark</div>
+               <div ng-if="shouldShowEditing()" class="form">
+                   <h4>Editing {{editedBookmark.title }}</h4>
+                   <form>   
+                       <div class="form-group">
+                       <label for="title">Bookmark title</label><br>
+                       <input id="title" type="text" class="form-control" ng-model="editedBookmark.title">
+                       </div>
+                       <div class="form-group">
+                       <label for="url">Bookmark URL</label><br>
+                       <input id="url" type="text" class="form-control" ng-model="editedBookmark.url">
+                       </div>
+                       <button type="button" ng-click="cancelEditing(); updateBookmark(editedBookmark); scrolltotop(); setEditedBookmark(null)" class="btn btn-info btn-lg">Save</button>
+                       <button class="btn btn-default btn-lg pull-right" ng-click="cancelEditing(); scrolltotop(); setEditedBookmark(null)">Cancel</button>
+                   </form>
+               </div>
+               <div ng-if="shouldShowCreating()" class="form">
+                <form>   
+                    <div class="form-group">
+                    <label for="title">Bookmark title</label><br>
+                    <input id="title" type="text" class="form-control" ng-model="newBookmark.title">
+                    </div>
+                    <div class="form-group">
+                    <label for="url">Bookmark URL</label><br>
+                    <input id="url" type="text" class="form-control" ng-model="newBookmark.url">
+                    </div>
+                    <button type="button" ng-click=" addBookmark(newBookmark); " class="btn btn-info btn-lg">Save</button>
+                    <button class="btn btn-default btn-lg pull-right" ng-click="scrolltotop(); cancelCreating();">Cancel</button>
+                </form>
+            </div>
+           </div>
+        </div>
+    </div>
+    <script src="angular.min.js"></script>
+    <script src="eggly.js"></script>
+</body>
+</html>
